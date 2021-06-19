@@ -17,9 +17,11 @@ class CreateStoredResourcesTable extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('protocol')->default('https');
-            $table->string('domain');
+            $table->string('domain')->nullable();
             $table->integer('port')->default(80);
-            $table->ipAddress('ip')->nullable();
+            $table->ipAddress('ip');
+            $table->boolean('is_active_ssl')->default(false);
+            $table->dateTime('ssl_expired_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('last_status')->nullable();
             $table->integer('last_request_execution_time')->default(0);
