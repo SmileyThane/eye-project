@@ -22,11 +22,12 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/stored_resources', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'index'])->name('get-stored-resources');
-    Route::get('/stored_resources/create', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'create'])->name('create-stored-resource');
-    Route::post('/stored_resources', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'store'])->name('store-stored-resources');
-    Route::get('/stored_resources/{id}', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'find'])->name('find-stored-resource');
-    Route::patch('/stored_resources/{id}', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'update'])->name('update-stored-resource');
-    Route::delete('/stored_resources/{id}', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'delete'])->name('delete-stored-resource');
+    Route::get('/stored-resources', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'index'])->name('get-stored-resources');
+    Route::get('/stored-resources/create', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'create'])->name('create-stored-resource');
+    Route::post('/stored-resources', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'store'])->name('store-stored-resources');
+    Route::get('/stored-resources/{id}', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'find'])->name('find-stored-resource');
+    Route::get('/stored-resources/{id}/ssl', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'updateSslInfo'])->name('update-ssl-info');
+    Route::patch('/stored-resources/{id}', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'edit'])->name('edit-stored-resource');
+    Route::delete('/stored-resources/{id}', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'delete'])->name('delete-stored-resource');
 
 });
