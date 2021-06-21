@@ -9,6 +9,8 @@ class StoredResource extends Model
 {
     use HasFactory;
 
+    public const DEFAULT_PROTOCOL = 'https';
+
     protected $fillable = [
         'id',
         'user_id',
