@@ -31,9 +31,14 @@
 
                                 @foreach($storedResources as $storedResource)
                                     <tr>
-                                        <td>{{ $storedResource->id }}</td>
+                                        <td>
+                                            <a href="{{route('find-stored-resource', ['id' => $storedResource->id])}}">
+                                                {{ $storedResource->id }}
+                                            </a>
+                                        </td>
                                         <td>{{ $storedResource->name }}</td>
-                                        <td>{{ $storedResource->protocol }}://{{ $storedResource->domain }}: {{ $storedResource->port }}</td>
+                                        <td>{{ $storedResource->protocol }}://{{ $storedResource->domain }}
+                                            : {{ $storedResource->port }}</td>
                                         <td>{{ $storedResource->ip }}</td>
                                         <td>{{ $storedResource->is_active_ssl }}</td>
                                         <td>{{ $storedResource->ssl_expired_at }}</td>
@@ -41,6 +46,7 @@
                                         <td>{{ $storedResource->last_status }}</td>
                                         <td>{{ $storedResource->last_request_execution_time }}</td>
                                         <td>{{ $storedResource->last_checked_at }}</td>
+
                                     </tr>
                                 @endforeach
 
