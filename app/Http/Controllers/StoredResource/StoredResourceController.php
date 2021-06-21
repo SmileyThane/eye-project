@@ -4,6 +4,7 @@ namespace App\Http\Controllers\StoredResource;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoredResource\CreateRequest;
+use App\Http\Requests\StoredResource\UpdateRequest;
 use App\Models\StoredResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,8 @@ class StoredResourceController extends Controller
     public function find($id)
     {
         $storedResource = StoredResource::query()->find($id);
+
+        return view("stored-resource/item", ['storedResource' => $storedResource]);
     }
 
     public function create()
@@ -30,24 +33,35 @@ class StoredResourceController extends Controller
 
     public function store(CreateRequest $request)
     {
-        $request['user_id'] = Auth::id();
-        if (ip2long($request['domain']) === false) {
-            $request['ip'] = gethostbyname($request['domain']);
-            if ($request['protocol'] === 'https') {
-                $certificate = SslCertificate::createForHostName($request['domain']);
-                $request['is_active_ssl'] = $certificate->isValid();
-                $request['ssl_expired_at'] = $certificate->expirationDate();
-            }
-        } else {
-            $request['ip'] = $request['domain'];
-        }
-
-        if ($request['port'] === null) {
-            unset($request['port']);
-        }
-        StoredResource::query()->create($request->all());
+        $storedResource = StoredResource::create($this->prepareStoredResourceArray($request->all()));
+        $this->updateSslInfo($storedResource);
 
         return redirect()->route('get-stored-resources');
+    }
+
+    private function prepareStoredResourceArray($data)
+    {
+        $data['user_id'] = Auth::id();
+        $data['ip'] = ip2long($data['domain']) === false ? gethostbyname($data['domain']) : $data['domain'];
+        if ($data['port'] === null) {
+            unset($data['port']);
+        }
+
+        return $data;
+    }
+
+    private function updateSslInfo(StoredResource $storedResource): StoredResource
+    {
+        if ($storedResource->protocol === StoredResource::DEFAULT_PROTOCOL &&
+            ip2long($storedResource->domain) === false
+        ) {
+            $certificate = SslCertificate::createForHostName($storedResource->domain);
+            $storedResource->is_active_ssl = $certificate->isValid();
+            $storedResource->ssl_expired_at = $certificate->expirationDate();
+            $storedResource->save();
+        }
+
+        return $storedResource;
     }
 
     public function udpate($id)
@@ -55,9 +69,13 @@ class StoredResourceController extends Controller
 
     }
 
-    public function edit(Request $request, $id)
+    public function edit(UpdateRequest $request, $id)
     {
-        StoredResource::query()->where(['id' => $id])->update($request->all());
+        $storedResource = StoredResource::query()->find($id);
+        $storedResource->update($this->prepareStoredResourceArray($request->all()));
+        $this->updateSslInfo($storedResource);
+
+        return redirect()->route('get-stored-resources');
     }
 
     public function delete($id)
