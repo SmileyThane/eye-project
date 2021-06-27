@@ -27,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/stored-resources', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'store'])->name('store-stored-resources');
     Route::get('/stored-resources/{id}', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'find'])->name('find-stored-resource');
     Route::get('/stored-resources/{id}/ssl', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'updateSslInfo'])->name('update-ssl-info');
+    Route::get('/stored-resources/{id}/check', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'check'])->name('check-status-info');
     Route::patch('/stored-resources/{id}', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'edit'])->name('edit-stored-resource');
     Route::delete('/stored-resources/{id}', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'delete'])->name('delete-stored-resource');
 
