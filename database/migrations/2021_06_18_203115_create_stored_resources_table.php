@@ -24,7 +24,7 @@ class CreateStoredResourcesTable extends Migration
             $table->boolean('is_active_ssl')->default(false);
             $table->dateTime('ssl_expired_at')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->boolean('last_status')->nullable();
+            $table->integer('last_status')->nullable();
             $table->integer('last_request_execution_time')->default(0);
             $table->dateTime('last_checked_at')->nullable();
             $table->timestamps();
