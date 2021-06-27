@@ -19,7 +19,6 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/stored-resources', [App\Http\Controllers\StoredResource\StoredResourceController::class, 'index'])->name('get-stored-resources');
