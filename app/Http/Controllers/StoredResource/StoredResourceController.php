@@ -64,11 +64,6 @@ class StoredResourceController extends Controller
         return $storedResource;
     }
 
-    public function udpate($id)
-    {
-
-    }
-
     public function edit(UpdateRequest $request, $id)
     {
         $storedResource = StoredResource::query()->find($id);
