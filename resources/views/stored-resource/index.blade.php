@@ -47,6 +47,14 @@
                                         <td>{{ $storedResource->last_request_execution_time }}</td>
                                         <td>{{ $storedResource->last_checked_at }}</td>
 
+                                        <td>
+                                        <a class="btn btn-group btn-sm btn-success" href="{{route('check-status-info', ['id' => $storedResource->id])}}">
+                                            <i class="fa fa-clipboard-list"></i>
+                                        </a>
+                                            <a class="btn btn-group btn-sm btn-danger" href="{{route('check-status-info', ['id' => $storedResource->id])}}">
+                                                <i class="fa fa-trash-alt"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
 
