@@ -15,7 +15,7 @@ use Throwable;
 class StoredResourceCheckingService
 {
 
-    public function check($id)
+    public function processChecking($id)
     {
         $storedResource = StoredResource::query()->find($id);
         if ($storedResource) {
