@@ -7,6 +7,7 @@ use App\Http\Requests\StoredResource\CreateRequest;
 use App\Http\Requests\StoredResource\UpdateRequest;
 use App\Models\StoredResource;
 use App\Models\StoredResourceMonitoringOption;
+use App\Services\StoredResource\StoredResourceCheckingService;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\Auth;
@@ -82,51 +83,7 @@ class StoredResourceController extends Controller
 
     public function check($id)
     {
-        $storedResource = StoredResource::query()->find($id);
-        if ($storedResource) {
-            $client = new Client([
-                'base_uri' => $storedResource->domain . ':' . $storedResource->port,
-            ]);
-            $type = 'GET';
-            $headers = [];
-            $parameters = [];
-            $body = [];
-            $monitoringOptions = StoredResourceMonitoringOption::query()->where(['stored_resource_id' => $id])->first();
-            if ($monitoringOptions) {
-                $type = $monitoringOptions->request_type;
-                $headers = json_decode($monitoringOptions->request_headers, true);
-                $parameters = json_decode($monitoringOptions->request_parameters, true);
-                $body = json_decode($monitoringOptions->request_body, true);
-            }
-
-            $startTime = now();
-
-            try {
-                $result = $client->request($type, '/', [
-                    RequestOptions::HEADERS => $headers,
-                    RequestOptions::QUERY => $parameters,
-                    RequestOptions::FORM_PARAMS => $body
-                ]);
-
-                $timing = now()->diffInMilliseconds($startTime);
-                $status = $result->getStatusCode();
-                $content = $result->getBody()->getContents();
-
-            } catch (\Throwable $throwable) {
-                $timing = now()->diff($startTime)->format("");
-                $status = 500;
-                $content = $throwable;
-            }
-
-            $storedResourceContent = (new StoredResourceContentController())->store($id, $content);
-            (new StoredResourceHistoryController())->store($id, $storedResourceContent->id, $timing, $status);
-
-            $storedResource->last_status = $status;
-            $storedResource->last_request_execution_time = $timing;
-            $storedResource->last_checked_at = now();
-            $storedResource->save();
-
-        }
+        (new StoredResourceCheckingService())->processChecking($id);
 
         return redirect()->route('get-stored-resources');
     }
