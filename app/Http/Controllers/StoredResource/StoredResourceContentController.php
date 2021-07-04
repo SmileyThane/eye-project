@@ -4,7 +4,6 @@ namespace App\Http\Controllers\StoredResource;
 
 use App\Http\Controllers\Controller;
 use App\Models\StoredResourceContent;
-use Illuminate\Http\Request;
 
 class StoredResourceContentController extends Controller
 {
