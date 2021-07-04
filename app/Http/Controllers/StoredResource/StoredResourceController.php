@@ -126,8 +126,8 @@ class StoredResourceController extends Controller
             $storedResource->last_checked_at = now();
             $storedResource->save();
 
-            return redirect()->route('get-stored-resources');
         }
 
+        return redirect()->route('get-stored-resources');
     }
 }
